@@ -1,9 +1,9 @@
-import { ConsoleLogger, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Utils } from '../../utils/Util';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../schemas/user.schema';
-import { CreateUserRequestBody, CreateUserResponseBody, DeleteUserRequestBody, DeleteUserResponseBody } from '../entities/user.entity';
+import { CreateUserRequestBody, CreateUserResponseBody, DeleteUserRequestBody, DeleteUserResponseBody, GetUsersResponseBody } from '../entities/user.entity';
 import { hashPassword } from 'src/utils/helpers';
 import * as jwt from "jsonwebtoken"
 import { Chance } from "chance"
@@ -20,11 +20,10 @@ export class UserService {
         const chance = new Chance()
         try {
 
-
             let value: any;
             const data: CreateUserRequestBody = user
 
-            const schema = Joi.object({
+            const schema : Joi.ObjectSchema<any> = Joi.object({
 
 
                 username: Joi.string()
@@ -75,7 +74,7 @@ export class UserService {
 
                 newUser.accessToken = accessToken
 
-             
+
 
                 const userCheck = await this.userModel.find({ email })
 
@@ -116,68 +115,91 @@ export class UserService {
 
     async deleteUser(user: DeleteUserRequestBody): Promise<DeleteUserResponseBody> {
 
-        let value: any;
-        const data: DeleteUserRequestBody = user
-
-        const schema = Joi.object({
-
-            email: Joi.string().required()
-        })
 
         try {
-            value = await schema.validateAsync(data);
+            let value: any;
+            const data: DeleteUserRequestBody = user
 
+            const schema = Joi.object({
+
+                email: Joi.string().required()
+            })
+
+            try {
+                value = await schema.validateAsync(data);
+
+            } catch (error) {
+                return {
+                    statusCode: 500,
+                    status: false,
+                    message: error.message,
+                    data: {}
+                }
+
+            }
+
+            if (value) {
+
+
+                const { email } = user
+
+                const deleteUser = await this.userModel.find({ email })
+
+
+                if (deleteUser.length < 1) {
+                    return {
+
+                        statusCode: 400, status: false, message: "User not Found", data: {},
+                    }
+                }
+
+                if (deleteUser) {
+                    const id = deleteUser[0]._id
+
+                    const deletedUser = await this.userModel.findByIdAndDelete(id)
+
+
+                    return {
+
+                        statusCode: 200, status: true, message: "User Removed Successfully", data: deletedUser,
+                    }
+
+                }
+
+            }
         } catch (error) {
+            Utils.logger.error(error);
             return {
                 statusCode: 500,
                 status: false,
                 message: error.message,
-                data: {}
-            }
+                data: {},
 
+
+            }
         }
-
-        if (value) {
-
-
-            const {email} = user
-            
-            const deleteUser = await this.userModel.find({ email })
-
-
-            if (deleteUser.length < 1) {
-                return {
-
-                    statusCode: 400, status: false, message: "User not Found", data: {},
-                }
-            }
-
-            if (deleteUser) {
-                const id = deleteUser[0]._id
-
-                const deletedUser = await this.userModel.findByIdAndDelete(id)
-
-
-                return {
-
-                    statusCode: 200, status: true, message: "User Removed Successfully", data: deletedUser,
-                }
-                
-
-            }
-            
-            
-
-            
-           
-        }
-
-
-
-
-        
     }
 
+    async getUsers(): Promise<GetUsersResponseBody> {
+
+        try {
+            const users = await this.userModel.find({})
+
+            return {
+
+                statusCode: 200, status: true, message: "Users Retrieved Successfully", data: users,
+            }
+
+        } catch (error) {
+            Utils.logger.error(error);
+            return {
+                statusCode: 500,
+                status: false,
+                message: error.message,
+                data: [{}],
+            }
+        }
+    }
 }
 
 

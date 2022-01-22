@@ -46,3 +46,11 @@ export class DeleteUserResponseBody {
 }
 
 
+export class GetUsersResponseBody {
+    statusCode: number;
+    status: boolean;
+    message: string;
+    data: Array<object>
+}
+
+

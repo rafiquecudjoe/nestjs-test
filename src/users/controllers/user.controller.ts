@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post,Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post,Res } from '@nestjs/common';
 import {
     ApiOperation,
     ApiResponse,
@@ -28,7 +28,7 @@ export class UserController {
         })
     }
     
-    @Post('/delete')
+    @Delete('')
     @ApiOperation({ summary: 'Subscribe' })
     async adminUserDelete(@Body() user: DeleteUserRequestBody, @Res() res: Response) {
         const response = await this.userService.deleteUser(user)
@@ -40,19 +40,21 @@ export class UserController {
         })
     }
 
+    @Get()
+    @ApiOperation({ summary: 'Subscribe' })
+    async allUsers( @Res() res: Response) {
+        const response = await this.userService.getUsers()
+
+        return res.status(response.statusCode).json({
+            message: response.message,
+            data: response.data
+
+        })
+    }
 
 
-    
 
-    // @Get('/')
-    // @ApiOperation({ summary: 'Fetch all subscribers' })
-    // @ApiResponse({
-    //     status: 200,
-    //     description: 'Subscriptions fetched successfuly',
-    //     type: Subscription,
-    //     isArray: true
-    // })
-    // viewSubscriptions(): Observable<Subscription[]> {
-    //     return this.subscriptionService.getSubscriptions();
-    // }
+
+
+  
 }

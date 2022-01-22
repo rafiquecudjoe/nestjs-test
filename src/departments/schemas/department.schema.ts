@@ -1,14 +1,15 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
 import { Document } from "mongoose"
 import * as mongoose from 'mongoose';
-import { User } from "./user.schema";
+import { User } from "../../users/schemas/user.schema";
+import { EnumDepartment } from "../entities/department.entity";
 
 export type DepartmentDocument = Department & Document;
 
 @Schema()
 export class Department {
     @Prop({ required: true })
-    Name: string
+    name: EnumDepartment
 
     @Prop()
     description:string    
