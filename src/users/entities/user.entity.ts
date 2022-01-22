@@ -1,13 +1,15 @@
+
+
 export enum Department {
-    ENGINEERING,
-    PRODUCT,
-    GROWTH,
+    ENGINEERING = "Engineering",
+    PRODUCT = "Product",
+    GROWTH = "Growth",
 }
 
 export enum Roles {
-    SUPER_ADMIN,
-    DEPARTMENT_MANAGER,
-    EMPLOYEE,
+    SUPER_ADMIN = "Super Admin",
+    DEPARTMENT_MANAGER = "Department Manager",
+    EMPLOYEE = "Employee",
 
 }
 
@@ -17,14 +19,30 @@ export class CreateUserRequestBody {
     lastName: string;
     username: string;
     email: string;
+    password:string
     role: Roles;
     department: Department
 }
 
 export class CreateUserResponseBody{
-    statusCode: 200;
+    statusCode: number;
     status: boolean;
     message: string;
-    data:{}
+    accessToken: string;
+    data:object
 
 }
+
+
+export class DeleteUserRequestBody{
+email:string
+}
+
+export class DeleteUserResponseBody {
+    statusCode: number;
+    status: boolean;
+    message: string;
+    data: object
+}
+
+

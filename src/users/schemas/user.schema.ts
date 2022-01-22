@@ -16,13 +16,19 @@ export class User {
     username: string
 
     @Prop()
+    password: string
+
+    @Prop()
     email :string     
 
     @Prop()
     role: Roles
     
     @Prop()
-    department:Department
+    department: Department
+    
+    @Prop()
+    accessToken:string
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)
