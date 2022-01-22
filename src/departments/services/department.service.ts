@@ -3,8 +3,9 @@ import { Utils } from '../../utils/Util';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Department, DepartmentDocument } from '../schemas/department.schema'
-import { CreateDepartmentRequestBody, CreateDepartmentResponseBody, DeleteDepartmentRequestBody, DeleteDepartmentResponseBody, GetDepartmentsResponseBody, UpdateDepartmentRequestBody, UpdateDepartmentResponseBody, ViewDepartmentRequestBody, ViewDepartmentResponseBody, } from '../entities/department.entity';
+import {  CreateDepartmentRequestBody, CreateDepartmentResponseBody, DeleteDepartmentRequestBody, DeleteDepartmentResponseBody, GetDepartmentsResponseBody, UpdateDepartmentRequestBody, UpdateDepartmentResponseBody, ViewDepartmentRequestBody, ViewDepartmentResponseBody, } from '../entities/department.entity';
 import * as Joi from 'joi'
+import { User } from 'src/users/schemas/user.schema';
 
 
 
@@ -290,26 +291,7 @@ export class DepartmentService {
         }
     }
 
-    // async assignUserToDepartment(): Promise<GetUsersResponseBody> {
-
-    //     try {
-    //         const users = await this.userModel.find({})
-
-    //         return {
-
-    //             statusCode: 200, status: true, message: "Users Retrieved Successfully", data: users,
-    //         }
-
-    //     } catch (error) {
-    //         Utils.logger.error(error);
-    //         return {
-    //             statusCode: 500,
-    //             status: false,
-    //             message: error.message,
-    //             data: [{}],
-    //         }
-    //     }
-    // }
+   
 
     // async getDepartments(): Promise<GetUsersResponseBody> {
 

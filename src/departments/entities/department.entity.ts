@@ -38,6 +38,7 @@ export class UpdateDepartmentResponseBody {
 }
 
 
+
 export class DeleteDepartmentRequestBody{
 name:EnumDepartment
 }

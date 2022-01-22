@@ -21,7 +21,7 @@ export class CreateUserRequestBody {
     email: string;
     password:string
     role: Roles;
-    department: Department
+    department?: Department
 }
 
 export class CreateUserResponseBody{
@@ -53,4 +53,18 @@ export class GetUsersResponseBody {
     data: Array<object>
 }
 
+
+export class AssignToDepartmentRequestBody {
+    name: string;
+    description: string;
+
+}
+
+export class AssignToDepartmentResponseBody {
+    statusCode: number;
+    status: boolean;
+    message: string;
+    data: object
+
+}
 

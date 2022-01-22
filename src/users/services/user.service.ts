@@ -3,11 +3,12 @@ import { Utils } from '../../utils/Util';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../schemas/user.schema';
-import { CreateUserRequestBody, CreateUserResponseBody, DeleteUserRequestBody, DeleteUserResponseBody, GetUsersResponseBody } from '../entities/user.entity';
+import {AssignToDepartmentRequestBody,AssignToDepartmentResponseBody, CreateUserRequestBody, CreateUserResponseBody, DeleteUserRequestBody, DeleteUserResponseBody, GetUsersResponseBody } from '../entities/user.entity';
 import { hashPassword } from 'src/utils/helpers';
 import * as jwt from "jsonwebtoken"
 import { Chance } from "chance"
 import * as Joi from 'joi'
+
 
 
 
@@ -37,7 +38,7 @@ export class UserService {
 
                 role: Joi.string().valid('EMPLOYEE', 'SUPER_ADIM', 'DEPARTMENT_MANAGER').required(),
 
-                department: Joi.string().valid("ENGINEERING", "PRODUCT", "GROWTH").required(),
+                department: Joi.string().valid("ENGINEERING", "PRODUCT", "GROWTH"),
 
                 password: Joi.string()
                     .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
@@ -189,6 +190,77 @@ export class UserService {
 
                 statusCode: 200, status: true, message: "Users Retrieved Successfully", data: users,
             }
+
+        } catch (error) {
+            Utils.logger.error(error);
+            return {
+                statusCode: 500,
+                status: false,
+                message: error.message,
+                data: [{}],
+            }
+        }
+    }
+
+
+    async assignUserToDepartment(request: AssignToDepartmentRequestBody): Promise<AssignToDepartmentResponseBody> {
+
+        try {
+
+            let value: any;
+            const data: any = request
+
+            const schema = Joi.object({
+
+                department: Joi.string().valid("ENGINEERING", "PRODUCT", "GROWTH"),
+                email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required()
+            })
+
+            try {
+                value = await schema.validateAsync(data);
+
+            } catch (error) {
+                return {
+                    statusCode: 500,
+                    status: false,
+                    message: error.message,
+                    data: {}
+                }
+
+            }
+            if (value) {
+
+                const { email } = data
+                const user = await this.userModel.find({ email })
+
+                if (user.length < 1) {
+
+                    return {
+
+                        statusCode: 200, status: true, message: "Users Not Found", data: {},
+                    }
+                    
+                }
+
+                if (user.length > 0) {
+
+                    const id = user[0]._id
+
+
+                    const assignUser = await this.userModel.findByIdAndUpdate(id, data, { new: true })
+                    return {
+
+                        statusCode: 200, status: true, message: "Users Assigned to Department Successfully", data: assignUser,
+                    }
+                }
+
+                
+
+            }
+
+
+
+           
 
         } catch (error) {
             Utils.logger.error(error);
