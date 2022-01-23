@@ -152,7 +152,7 @@ export class DepartmentService {
 
             return {
 
-                statusCode: 200, status: true, message: "Users Retrieved Successfully", data: departments,
+                statusCode: 200, status: true, message: "Departments Retrieved Successfully", data: departments,
             }
 
         } catch (error) {
