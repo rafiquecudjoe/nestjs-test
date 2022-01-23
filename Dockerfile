@@ -23,5 +23,6 @@ COPY package.json .
 RUN npm install --production
 
 COPY --from=build /app/dist  ./dist
+
 CMD npm run start:prod
 
