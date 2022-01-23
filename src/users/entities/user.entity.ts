@@ -77,6 +77,7 @@ export class UserCheck {
     firstName: string;
     accessToken: string;
     __v?: number;
+    department?:string
 }
  
 export class UserSaved {
@@ -89,6 +90,8 @@ export class UserSaved {
     accessToken: string;
     __v?: number;
 }
+
+
 
 
 export class AssignToDepartmentRequestBody {

@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './users/services/user.module';
 import { DepartmentModule } from './departments/services/department.module';
 import { IsDepartManagerMiddleware } from 'common/middleware/IsDepartManager.middleware';
-import { UserController } from './users/controllers/user.controller';
+
 import { IsAdminMiddleware } from 'common/middleware/isAdmin.middleware';
 
 
@@ -17,7 +17,7 @@ import { IsAdminMiddleware } from 'common/middleware/isAdmin.middleware';
 export class AppModule implements NestModule{
 
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(IsDepartManagerMiddleware).forRoutes({ path: 'user', method: RequestMethod.DELETE }, { path: 'user', method: RequestMethod.GET })
-    consumer.apply(IsAdminMiddleware).forRoutes("user/create","user/department", "department/create", { path: 'department', method: RequestMethod.DELETE }, { path: 'department', method: RequestMethod.POST }, { path: 'department', method: RequestMethod.PATCH }, "user/assign/department", { path: 'department', method: RequestMethod.POST }, { path: 'department', method: RequestMethod.GET})
+    consumer.apply(IsDepartManagerMiddleware).forRoutes({ path: 'user', method: RequestMethod.DELETE }, "user/department", )
+    consumer.apply(IsAdminMiddleware).forRoutes("user/create", "department/create", { path: 'user', method: RequestMethod.GET } ,{ path: 'department', method: RequestMethod.DELETE }, { path: 'department', method: RequestMethod.POST }, { path: 'department', method: RequestMethod.PATCH }, "user/assign/department", { path: 'department', method: RequestMethod.POST }, { path: 'department', method: RequestMethod.GET})
   }
 }

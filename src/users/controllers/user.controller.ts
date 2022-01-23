@@ -41,7 +41,7 @@ export class UserController {
         })
     }
 
-    @ApiTags('Department Manager Endpoints')
+    @ApiTags('Super Admin Endpoints')
     @Get()
     @ApiOperation({ summary: 'list all users' })
     @ApiResponse({ status: 200, description: 'All users Retrieved successfully.' })  

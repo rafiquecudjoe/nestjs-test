@@ -115,7 +115,7 @@ export class UserService {
             let value: any;
             const data: DeleteUserRequestBody = user
 
-            const schema = Joi.object({
+            const schema : Joi.ObjectSchema<any> = Joi.object({
 
                 email: Joi.string().required()
             })
@@ -178,7 +178,7 @@ export class UserService {
     async getUsers(): Promise<GetUsersResponseBody> {
 
         try {
-            const users = await this.userModel.find({})
+            const users : User[] = await this.userModel.find({})
 
             return {
 
@@ -204,7 +204,7 @@ export class UserService {
             let value: any;
             const data: any = request
 
-            const schema = Joi.object({
+            const schema: Joi.ObjectSchema<any> = Joi.object({
 
                 department: Joi.string().valid("ENGINEERING", "PRODUCT", "GROWTH").required(),
                 email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required()
@@ -225,9 +225,9 @@ export class UserService {
             if (value) {
 
                 const { email } = data
-                const user = await this.userModel.find({ email })
+                const user : UserCheck = await this.userModel.findOne({ email })
 
-                if (user.length < 1) {
+                if (!user) {
 
                     return {
 
@@ -236,21 +236,21 @@ export class UserService {
 
                 }
 
-                if (user.length > 0) {
+                if (user) {
 
-                    if (user[0].department !== null) {
+                    if (user.department) {
 
                         return {
 
-                            statusCode: 400, status: true, message: "Users is Already Assigned a Department ", data: {},
+                            statusCode: 400, status: true, message: "User is Already Assigned a Department ", data: {},
                         }
 
                     }
 
-                    const id = user[0]._id
+                    const id :string = user._id
 
 
-                    const assignUser = await this.userModel.findByIdAndUpdate(id, data, { new: true })
+                    const assignUser :UserCheck = await this.userModel.findByIdAndUpdate(id, data, { new: true })
                     return {
 
                         statusCode: 200, status: true, message: "Users Assigned to Department Successfully", data: assignUser,
