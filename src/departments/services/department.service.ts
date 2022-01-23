@@ -227,8 +227,6 @@ export class DepartmentService {
 
         try {
 
-           
-
             let value: any;
             const data: any = department
 

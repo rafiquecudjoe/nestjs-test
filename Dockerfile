@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY package.json .
 
-RUN npm install --only=production
+RUN npm install --production
 
 COPY . .
 
@@ -20,7 +20,7 @@ WORKDIR /app
 
 COPY package.json .
 
-RUN npm install --only=pproduction
+RUN npm install --production
 
 COPY --from=build /app/dist  ./dist
 CMD npm run start:prod
