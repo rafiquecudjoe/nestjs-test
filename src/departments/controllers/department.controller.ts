@@ -86,7 +86,7 @@ export class DepartmentController {
     }
 
     @ApiTags('Super Admin Endpoints')
-    @Patch('')
+    @Patch('/admin')
     @ApiOperation({ summary: 'Update Details of a Department by Manager' })
     @ApiResponse({ status: 201, description: 'Department Updated Successfully.' })
     async ManagerPatchDepartment(@Body() department: UpdateDepartmentRequestBody, @Res() res: Response) {

@@ -17,7 +17,7 @@ import { IsAdminMiddleware } from 'common/middleware/isAdmin.middleware';
 export class AppModule implements NestModule{
 
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(IsDepartManagerMiddleware).forRoutes({ path: 'user', method: RequestMethod.DELETE }, "user/department", )
-    consumer.apply(IsAdminMiddleware).forRoutes("user/create", "department/create", { path: 'user', method: RequestMethod.GET } ,{ path: 'department', method: RequestMethod.DELETE }, { path: 'department', method: RequestMethod.POST }, { path: 'department', method: RequestMethod.PATCH }, "user/assign/department", { path: 'department', method: RequestMethod.POST }, { path: 'department', method: RequestMethod.GET})
+    consumer.apply(IsDepartManagerMiddleware).forRoutes({ path: 'user', method: RequestMethod.DELETE }, "user/department", { path: 'department', method: RequestMethod.PATCH } )
+    consumer.apply(IsAdminMiddleware).forRoutes("department/admin","user/create", "department/create", { path: 'user', method: RequestMethod.GET } ,{ path: 'department', method: RequestMethod.DELETE }, { path: 'department', method: RequestMethod.POST }, { path: 'department', method: RequestMethod.PATCH }, "user/assign/department", { path: 'department', method: RequestMethod.POST }, { path: 'department', method: RequestMethod.GET})
   }
 }

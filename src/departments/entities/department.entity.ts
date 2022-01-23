@@ -31,6 +31,14 @@ export class CreateDepartmentResponseBody {
 
 }
 
+export class DepartmentCheck {
+
+    _id?: string;
+    name: string;
+    description: string;
+
+}
+
 export class UpdateDepartmentRequestBody {
     @ApiProperty({ example: 'ENGINEERING', description: "The Departments name" })
     name: string;

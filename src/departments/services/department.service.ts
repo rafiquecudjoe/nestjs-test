@@ -3,7 +3,7 @@ import { Utils } from '../../utils/Util';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Department, DepartmentDocument } from '../schemas/department.schema'
-import {  CreateDepartment, CreateDepartmentRequestBody, CreateDepartmentResponseBody, DeleteDepartmentRequestBody, DeleteDepartmentResponseBody, GetDepartmentsResponseBody, UpdateDepartmentRequestBody, UpdateDepartmentResponseBody, ViewDepartmentRequestBody, ViewDepartmentResponseBody, } from '../entities/department.entity';
+import {  CreateDepartment, CreateDepartmentRequestBody, CreateDepartmentResponseBody, DeleteDepartmentRequestBody, DeleteDepartmentResponseBody, DepartmentCheck, GetDepartmentsResponseBody, UpdateDepartmentRequestBody, UpdateDepartmentResponseBody, ViewDepartmentRequestBody, ViewDepartmentResponseBody, } from '../entities/department.entity';
 import * as Joi from 'joi'
 
 
@@ -82,7 +82,7 @@ export class DepartmentService {
             let value: any;
             const data: DeleteDepartmentRequestBody = user
 
-            const schema = Joi.object({
+            const schema : Joi.ObjectSchema<any> = Joi.object({
 
                 name: Joi.string().valid("ENGINEERING", "PRODUCT", "GROWTH").required()
             })
@@ -105,25 +105,24 @@ export class DepartmentService {
 
                 const { name } = user
 
-                const deleteUser = await this.departmentModel.find({ name })
+                const deleteDepartment: DepartmentCheck = await this.departmentModel.findOne({ name })
 
 
-                if (deleteUser.length < 1) {
+                if (!deleteDepartment) {
                     return {
 
                         statusCode: 400, status: false, message: "User not Found", data: {},
                     }
                 }
 
-                if (deleteUser) {
-                    const id = deleteUser[0]._id
+                if (deleteDepartment) {
+                    const id = deleteDepartment._id
 
-                    const deletedUser = await this.departmentModel.findByIdAndDelete(id)
-
+                    const deletedDepartment : DepartmentCheck= await this.departmentModel.findByIdAndDelete(id)
 
                     return {
 
-                        statusCode: 200, status: true, message: "Department Removed Successfully", data: deletedUser,
+                        statusCode: 200, status: true, message: "Department Removed Successfully", data: deletedDepartment,
                     }
 
                 }
@@ -146,8 +145,7 @@ export class DepartmentService {
 
         try {
 
-
-            const departments = await this.departmentModel.find({})
+            const departments :DepartmentCheck[] = await this.departmentModel.find({})
 
             return {
 
@@ -173,7 +171,7 @@ export class DepartmentService {
             let value: any;
             const data: ViewDepartmentRequestBody = department
 
-            const schema = Joi.object({
+            const schema : Joi.ObjectSchema<any> = Joi.object({
 
                 name: Joi.string().valid("ENGINEERING", "PRODUCT", "GROWTH").required()
             })
@@ -195,9 +193,16 @@ export class DepartmentService {
                 const { name } = data
 
 
-                const departments = await this.departmentModel.find({ name })
+                const department: DepartmentCheck = await this.departmentModel.findOne({ name })
+                
+                if (!department) {
+                    
+                    return {
 
-                const department = departments[0]
+                        statusCode: 400, status: false, message: "Department does not exist", data: {},
+                    }
+                }
+
 
                 return {
 
@@ -229,7 +234,7 @@ export class DepartmentService {
             let value: any;
             const data: any = department
 
-            const schema = Joi.object({
+            const schema: Joi.ObjectSchema<any> = Joi.object({
 
                 name: Joi.string().valid("ENGINEERING", "PRODUCT", "GROWTH"),
                 description: Joi.string().required(),
@@ -252,13 +257,13 @@ export class DepartmentService {
 
                 const { name } = data
 
-                const department = await this.departmentModel.find({ name })
+                const department :DepartmentCheck = await this.departmentModel.findOne({ name })
 
-                if (department.length > 0) {
+                if (department) {
 
-                    const id = department[0]._id
+                    const id : string  = department._id
 
-                    const updateDepartment = await this.departmentModel.findByIdAndUpdate(
+                    const updateDepartment :DepartmentCheck = await this.departmentModel.findByIdAndUpdate(
                         id,
                         data,
                         { new: true })
