@@ -35,7 +35,7 @@ export class UserService {
 
                 lastName: Joi.string(),
 
-                role: Joi.string().valid('EMPLOYEE', 'SUPER_ADIM', 'DEPARTMENT_MANAGER').required(),
+                role: Joi.string().valid('EMPLOYEE', 'SUPER_ADMIN', 'DEPARTMENT_MANAGER').required(),
 
                 department: Joi.string().valid("ENGINEERING", "PRODUCT", "GROWTH"),
 

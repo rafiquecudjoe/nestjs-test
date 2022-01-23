@@ -1,11 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export enum EnumDepartment {
-    ENGINEERING = "Engineering",
-    PRODUCT = "Product",
-    GROWTH = "Growth",
+    ENGINEERING = "ENGINEERING",
+    PRODUCT = "PRODUCT",
+    GROWTH = "GROWTH",
 }
-
 
 
 export class CreateDepartmentRequestBody {
