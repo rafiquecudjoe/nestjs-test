@@ -299,11 +299,10 @@ export class DepartmentService {
         try {
 
 
-
             let value: any;
             const data: any = department
 
-            const schema = Joi.object({
+            const schema: Joi.ObjectSchema<any> = Joi.object({
 
                 name: Joi.string().valid("ENGINEERING", "PRODUCT", "GROWTH"),
                 description: Joi.string().required(),
@@ -326,13 +325,13 @@ export class DepartmentService {
 
                 const { name } = data
 
-                const department = await this.departmentModel.find({ name })
+                const department :DepartmentCheck = await this.departmentModel.findOne({ name })
 
-                if (department.length > 0) {
+                if (department) {
 
-                    const id = department[0]._id
+                    const id : string = department._id
 
-                    const updateDepartment = await this.departmentModel.findByIdAndUpdate(
+                    const updateDepartment : DepartmentCheck = await this.departmentModel.findByIdAndUpdate(
                         id,
                         data,
                         { new: true })
@@ -342,13 +341,7 @@ export class DepartmentService {
 
                         statusCode: 200, status: true, message: "Department updated Successfully", data: updateDepartment,
                     }
-
-
-
-
                 }
-
-
             }
 
         } catch (error) {
@@ -361,74 +354,6 @@ export class DepartmentService {
             }
         }
     }
-
-   
-
-    // async getDepartments(): Promise<GetUsersResponseBody> {
-
-    //     try {
-    //         const users = await this.userModel.find({})
-
-    //         return {
-
-    //             statusCode: 200, status: true, message: "Users Retrieved Successfully", data: users,
-    //         }
-
-    //     } catch (error) {
-    //         Utils.logger.error(error);
-    //         return {
-    //             statusCode: 500,
-    //             status: false,
-    //             message: error.message,
-    //             data: [{}],
-    //         }
-    //     }
-    // }
-
-   
-
-    // async GetUsersByDepartment(): Promise<GetUsersResponseBody> {
-
-    //     try {
-    //         const users = await this.userModel.find({})
-
-    //         return {
-
-    //             statusCode: 200, status: true, message: "Users Retrieved Successfully", data: users,
-    //         }
-
-    //     } catch (error) {
-    //         Utils.logger.error(error);
-    //         return {
-    //             statusCode: 500,
-    //             status: false,
-    //             message: error.message,
-    //             data: [{}],
-    //         }
-    //     }
-    // }
-
-    // async FilterUsersInDepartment(): Promise<GetUsersResponseBody> {
-
-    //     try {
-    //         const users = await this.userModel.find({})
-
-    //         return {
-
-    //             statusCode: 200, status: true, message: "Users Retrieved Successfully", data: users,
-    //         }
-
-    //     } catch (error) {
-    //         Utils.logger.error(error);
-    //         return {
-    //             statusCode: 500,
-    //             status: false,
-    //             message: error.message,
-    //             data: [{}],
-    //         }
-    //     }
-    // }
-
 
 
 }
