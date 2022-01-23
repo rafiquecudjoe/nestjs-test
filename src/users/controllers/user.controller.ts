@@ -14,7 +14,7 @@ import { Response } from 'express';
 export class UserController {
    constructor(private  userService:UserService) {}
 
-    @ApiTags('Department Manager Endpoints')
+    @ApiTags('Super Admin Endpoints')
     @Post('/create')
     @ApiOperation({ summary: 'Create a user' })
     @ApiResponse({ status: 200, description: 'User created successfully.' })  
@@ -27,7 +27,7 @@ export class UserController {
         })
     }
     
-    @ApiTags('Department Manager Endpoints')
+    @ApiTags('Super Admin Endpoints')
     @Delete('')
     @ApiOperation({ summary: 'Delete a user' })
     @ApiResponse({ status: 200, description: 'User deleted successfully.' })  
