@@ -12,7 +12,7 @@ RUN npm install -g @nestjs/cli
 
 RUN npm run build
 
-EXPOSE 3000
+EXPOSE 4000
 
 
 
