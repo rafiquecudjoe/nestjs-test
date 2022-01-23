@@ -68,6 +68,28 @@ export class GetUsersResponseBody {
     data: Array<object>
 }
 
+export class UserCheck {
+    _id: string;
+    role: string;
+    email: string;
+    password: string;
+    username: string;
+    firstName: string;
+    accessToken: string;
+    __v?: number;
+}
+ 
+export class UserSaved {
+    _id: string;
+    role: string;
+    email: string;
+    password: string;
+    username: string;
+    firstName: string;
+    accessToken: string;
+    __v?: number;
+}
+
 
 export class AssignToDepartmentRequestBody {
 

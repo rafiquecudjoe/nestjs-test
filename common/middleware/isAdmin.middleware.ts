@@ -34,8 +34,7 @@ export class IsAdminMiddleware implements NestMiddleware {
 
         if (accessToken === user.accessToken) {
 
-            console.log(user.role)
-            console.log(Roles.SUPER_ADMIN)
+        
 
             if (user.role === Roles.SUPER_ADMIN) {
 

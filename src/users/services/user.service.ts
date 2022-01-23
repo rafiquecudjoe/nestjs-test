@@ -3,7 +3,7 @@ import { Utils } from '../../utils/Util';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../schemas/user.schema';
-import { AssignToDepartmentRequestBody, AssignToDepartmentResponseBody, CreateUserRequestBody, CreateUserResponseBody, DeleteUserRequestBody, DeleteUserResponseBody, GetUsersInDepartmentRequestBody, GetUsersInDepartmentResponseBody, GetUsersResponseBody } from '../entities/user.entity';
+import { AssignToDepartmentRequestBody, AssignToDepartmentResponseBody, CreateUserRequestBody, CreateUserResponseBody, DeleteUserRequestBody, DeleteUserResponseBody, GetUsersInDepartmentRequestBody, GetUsersInDepartmentResponseBody, GetUsersResponseBody, UserCheck, UserSaved } from '../entities/user.entity';
 import { hashPassword } from 'src/utils/helpers';
 import * as jwt from "jsonwebtoken"
 import { Chance } from "chance"
@@ -17,7 +17,7 @@ export class UserService {
 
     async createUser(user: CreateUserRequestBody): Promise<CreateUserResponseBody> {
 
-        const chance = new Chance()
+        const chance: Chance.Chance = new Chance()
         try {
 
             let value: any;
@@ -64,22 +64,19 @@ export class UserService {
             if (value) {
                 const { password, firstName, lastName, username, email, role, department } = user
 
-                const hashedPassword = await hashPassword(password)
+                const hashedPassword: string = await hashPassword(password)
 
                 let newUser = new this.userModel({ password: hashedPassword, firstName, lastName, username, email, role, department })
 
-                const randomString = chance.string()
+                const randomString: string = chance.string()
 
-                const accessToken = jwt.sign({ userId: newUser._id }, randomString, { expiresIn: "5d" })
+                const accessToken: string = jwt.sign({ userId: newUser._id }, randomString, { expiresIn: "5d" })
 
                 newUser.accessToken = accessToken
 
+                const userCheck : UserCheck = await this.userModel.findOne({ email })
 
-
-                const userCheck = await this.userModel.find({ email })
-
-
-                if (userCheck.length > 0) {
+                if (userCheck) {
 
                     return {
                         statusCode: 500,
@@ -91,9 +88,7 @@ export class UserService {
                     }
                 }
 
-                const saved = await newUser.save()
-
-
+                const saved: UserSaved = await newUser.save()
                 // Success
                 return {
                     statusCode: 200, status: true, message: "User created successfully", data: saved, accessToken
