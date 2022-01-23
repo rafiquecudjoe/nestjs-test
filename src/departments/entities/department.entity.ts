@@ -16,6 +16,12 @@ export class CreateDepartmentRequestBody {
 
 }
 
+export class CreateDepartment {
+    id?: string;
+    name: string;
+    description: string;
+    }
+
 export class CreateDepartmentResponseBody {
 
     statusCode: number;

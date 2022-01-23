@@ -277,7 +277,7 @@ export class UserService {
             let value: any;
             const data: any = request
 
-            const schema = Joi.object({
+            const schema: Joi.ObjectSchema<any> = Joi.object({
 
                 department: Joi.string().valid("ENGINEERING", "PRODUCT", "GROWTH").required(),
             })
@@ -297,7 +297,7 @@ export class UserService {
 
                 const { department } = data
 
-                const usersIndepartment = await this.userModel.find({ department })
+                const usersIndepartment : User[] = await this.userModel.find({ department })
 
                 if (usersIndepartment.length < 1) {
                     return {

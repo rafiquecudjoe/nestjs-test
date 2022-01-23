@@ -3,9 +3,8 @@ import { Utils } from '../../utils/Util';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Department, DepartmentDocument } from '../schemas/department.schema'
-import {  CreateDepartmentRequestBody, CreateDepartmentResponseBody, DeleteDepartmentRequestBody, DeleteDepartmentResponseBody, GetDepartmentsResponseBody, UpdateDepartmentRequestBody, UpdateDepartmentResponseBody, ViewDepartmentRequestBody, ViewDepartmentResponseBody, } from '../entities/department.entity';
+import {  CreateDepartment, CreateDepartmentRequestBody, CreateDepartmentResponseBody, DeleteDepartmentRequestBody, DeleteDepartmentResponseBody, GetDepartmentsResponseBody, UpdateDepartmentRequestBody, UpdateDepartmentResponseBody, ViewDepartmentRequestBody, ViewDepartmentResponseBody, } from '../entities/department.entity';
 import * as Joi from 'joi'
-import { User } from 'src/users/schemas/user.schema';
 
 
 
@@ -42,19 +41,19 @@ export class DepartmentService {
             if (value) {
                 const { name, description } = department
 
-                const departmentCheck = await this.departmentModel.find({ name })
+                const departmentCheck = await this.departmentModel.findOne({ name })
 
-                if (departmentCheck.length > 0) {
+                if (departmentCheck) {
                     return {
                         statusCode: 400, status: false, message: "Department already exist", data: {}
                     }
                 }
 
-                let newDepartment = new this.departmentModel({ name, description })
+                let newDepartment: any = new this.departmentModel({ name, description })
 
 
 
-                const saved = await newDepartment.save()
+                const saved : CreateDepartment = await newDepartment.save()
 
 
                 // Success
