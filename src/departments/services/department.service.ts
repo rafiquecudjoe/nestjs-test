@@ -291,6 +291,75 @@ export class DepartmentService {
         }
     }
 
+
+    async ManagerPatchDepartmentDetails(department: UpdateDepartmentRequestBody): Promise<UpdateDepartmentResponseBody> {
+
+        try {
+
+
+
+            let value: any;
+            const data: any = department
+
+            const schema = Joi.object({
+
+                name: Joi.string().valid("ENGINEERING", "PRODUCT", "GROWTH"),
+                description: Joi.string().required(),
+            })
+
+            try {
+                value = await schema.validateAsync(data);
+
+            } catch (error) {
+                return {
+                    statusCode: 500,
+                    status: false,
+                    message: error.message,
+                    data: {}
+                }
+
+            }
+
+            if (value) {
+
+                const { name } = data
+
+                const department = await this.departmentModel.find({ name })
+
+                if (department.length > 0) {
+
+                    const id = department[0]._id
+
+                    const updateDepartment = await this.departmentModel.findByIdAndUpdate(
+                        id,
+                        data,
+                        { new: true })
+
+
+                    return {
+
+                        statusCode: 200, status: true, message: "Department updated Successfully", data: updateDepartment,
+                    }
+
+
+
+
+                }
+
+
+            }
+
+        } catch (error) {
+            Utils.logger.error(error);
+            return {
+                statusCode: 500,
+                status: false,
+                message: error.message,
+                data: {},
+            }
+        }
+    }
+
    
 
     // async getDepartments(): Promise<GetUsersResponseBody> {
@@ -314,26 +383,7 @@ export class DepartmentService {
     //     }
     // }
 
-    // async getUsersInDepartment(): Promise<GetUsersResponseBody> {
-
-    //     try {
-    //         const users = await this.userModel.find({})
-
-    //         return {
-
-    //             statusCode: 200, status: true, message: "Users Retrieved Successfully", data: users,
-    //         }
-
-    //     } catch (error) {
-    //         Utils.logger.error(error);
-    //         return {
-    //             statusCode: 500,
-    //             status: false,
-    //             message: error.message,
-    //             data: [{}],
-    //         }
-    //     }
-    // }
+   
 
     // async GetUsersByDepartment(): Promise<GetUsersResponseBody> {
 

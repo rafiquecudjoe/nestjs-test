@@ -1,41 +1,56 @@
-
+import { ApiProperty } from '@nestjs/swagger';
 
 export enum Department {
-    ENGINEERING = "Engineering",
-    PRODUCT = "Product",
-    GROWTH = "Growth",
+    ENGINEERING = "ENGINEERING",
+    PRODUCT = "PRODUCT",
+    GROWTH = "GROWTH",
 }
 
 export enum Roles {
-    SUPER_ADMIN = "Super Admin",
-    DEPARTMENT_MANAGER = "Department Manager",
-    EMPLOYEE = "Employee",
+    SUPER_ADMIN = "SUPER_ADMIN",
+    DEPARTMENT_MANAGER = "DEPARTMENT_MANAGER",
+    EMPLOYEE = "EMPLOYEE",
 
 }
 
 
 export class CreateUserRequestBody {
+
+    @ApiProperty({ example: 'Jonhy', description: 'The User\'s fisrt name' })
     firstName: string;
+
+    @ApiProperty({ example: 'Rocket', description: 'The user\'s last name' })
     lastName: string;
+
+    @ApiProperty({ example: 'Jonhy1', description: 'The user\'s username' })
     username: string;
+
+    @ApiProperty({ example: 'Jonhy12@gmail.com', description: 'The user\'s email' })
     email: string;
-    password:string
+
+    @ApiProperty({ example: '**********', description: "The users\'s password" })
+    password: string;
+
+    @ApiProperty({ example: 'EMPLOYEE', description: 'The user\'s role' })
     role: Roles;
+
+    @ApiProperty({ example: 'ENGINEERING', description: 'The users\'s department' })
     department?: Department
 }
 
-export class CreateUserResponseBody{
+export class CreateUserResponseBody {
     statusCode: number;
     status: boolean;
     message: string;
     accessToken: string;
-    data:object
+    data: object
 
 }
 
 
-export class DeleteUserRequestBody{
-email:string
+export class DeleteUserRequestBody {
+    @ApiProperty({ example: 'Jonhy12@gmail.com', description: 'The user\'s email' })
+    email: string
 }
 
 export class DeleteUserResponseBody {
@@ -55,8 +70,12 @@ export class GetUsersResponseBody {
 
 
 export class AssignToDepartmentRequestBody {
-    name: string;
-    description: string;
+
+    @ApiProperty({ example: 'Jonhy12@gmail.com', description: 'The user\'s email' })
+    email: string;
+
+    @ApiProperty({ example: 'ENGINEERING', description: 'The departments name' })
+    department: string;
 
 }
 
@@ -68,3 +87,18 @@ export class AssignToDepartmentResponseBody {
 
 }
 
+export class GetUsersInDepartmentRequestBody {
+
+    @ApiProperty({ example: 'ENGINEERING', description: 'The name of the department' })
+    department: string;
+
+
+}
+
+export class GetUsersInDepartmentResponseBody {
+    statusCode: number;
+    status: boolean;
+    message: string;
+    data: object
+
+}

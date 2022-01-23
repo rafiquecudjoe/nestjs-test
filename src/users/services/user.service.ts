@@ -3,12 +3,11 @@ import { Utils } from '../../utils/Util';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../schemas/user.schema';
-import {AssignToDepartmentRequestBody,AssignToDepartmentResponseBody, CreateUserRequestBody, CreateUserResponseBody, DeleteUserRequestBody, DeleteUserResponseBody, GetUsersResponseBody } from '../entities/user.entity';
+import { AssignToDepartmentRequestBody, AssignToDepartmentResponseBody, CreateUserRequestBody, CreateUserResponseBody, DeleteUserRequestBody, DeleteUserResponseBody, GetUsersInDepartmentRequestBody, GetUsersInDepartmentResponseBody, GetUsersResponseBody } from '../entities/user.entity';
 import { hashPassword } from 'src/utils/helpers';
 import * as jwt from "jsonwebtoken"
 import { Chance } from "chance"
 import * as Joi from 'joi'
-
 
 
 
@@ -24,7 +23,7 @@ export class UserService {
             let value: any;
             const data: CreateUserRequestBody = user
 
-            const schema : Joi.ObjectSchema<any> = Joi.object({
+            const schema: Joi.ObjectSchema<any> = Joi.object({
 
 
                 username: Joi.string()
@@ -212,7 +211,7 @@ export class UserService {
 
             const schema = Joi.object({
 
-                department: Joi.string().valid("ENGINEERING", "PRODUCT", "GROWTH"),
+                department: Joi.string().valid("ENGINEERING", "PRODUCT", "GROWTH").required(),
                 email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required()
             })
 
@@ -239,10 +238,19 @@ export class UserService {
 
                         statusCode: 200, status: true, message: "Users Not Found", data: {},
                     }
-                    
+
                 }
 
                 if (user.length > 0) {
+
+                    if (user[0].department !== null) {
+
+                        return {
+
+                            statusCode: 400, status: true, message: "Users is Already Assigned a Department ", data: {},
+                        }
+
+                    }
 
                     const id = user[0]._id
 
@@ -254,14 +262,61 @@ export class UserService {
                     }
                 }
 
-                
-
             }
 
+        } catch (error) {
+            Utils.logger.error(error);
+            return {
+                statusCode: 500,
+                status: false,
+                message: error.message,
+                data: [{}],
+            }
+        }
+    }
 
+    async getUsersInDepartment(request: GetUsersInDepartmentRequestBody): Promise<GetUsersInDepartmentResponseBody> {
 
-           
+        try {
 
+            let value: any;
+            const data: any = request
+
+            const schema = Joi.object({
+
+                department: Joi.string().valid("ENGINEERING", "PRODUCT", "GROWTH").required(),
+            })
+
+            try {
+                value = await schema.validateAsync(data);
+
+            } catch (error) {
+                return {
+                    statusCode: 500,
+                    status: false,
+                    message: error.message,
+                    data: {}
+                }
+            }
+            if (value) {
+
+                const { department } = data
+
+                const usersIndepartment = await this.userModel.find({ department })
+
+                if (usersIndepartment.length < 1) {
+                    return {
+
+                        statusCode: 200, status: true, message: "No Users in Department", data: {},
+                    }
+
+                }
+
+                return {
+
+                    statusCode: 200, status: true, message: `Users in ${department} Department Retrieved Successfully`, data: usersIndepartment,
+                }
+            }
         } catch (error) {
             Utils.logger.error(error);
             return {

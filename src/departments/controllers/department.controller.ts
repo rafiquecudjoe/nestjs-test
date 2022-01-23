@@ -10,13 +10,13 @@ import { Response } from 'express';
 
 
 @Controller('department')
-@ApiTags('Departments')
 export class DepartmentController {
-   constructor(private  departmentService:DepartmentService) {}
-
+    constructor(private departmentService: DepartmentService) { }
+    
+    @ApiTags('Super Admin Endpoints')
     @Post('/create')
-    @ApiOperation({ summary: 'Subscribe' })
-    @ApiResponse({ status: 201, description: 'Subscription created.' })
+    @ApiOperation({ summary: 'Create a Department' })
+    @ApiResponse({ status: 200, description: 'Department Created successfully.' })
     async DepartmentCreate(@Body() department: CreateDepartmentRequestBody, @Res() res: Response){
         const response = await this.departmentService.createDepartment(department)
         
@@ -27,11 +27,10 @@ export class DepartmentController {
         })
     }
 
-   
-
+    @ApiTags('Super Admin Endpoints')
     @Get('')
-    @ApiOperation({ summary: 'Subscribe' })
-    @ApiResponse({ status: 201, description: 'Subscription created.' })
+    @ApiOperation({ summary: 'List all departments' })
+    @ApiResponse({ status: 201, description: 'All departments retrieved successfully' })
     async viewDepartments(@Res() res: Response) {
         const response = await this.departmentService.GetDepartments()
 
@@ -43,9 +42,11 @@ export class DepartmentController {
     }
 
 
-
+    
+    @ApiTags('Super Admin Endpoints')
     @Delete('')
-    @ApiOperation({ summary: 'Subscribe' })
+    @ApiOperation({ summary: 'Delete a department' })
+    @ApiResponse({ status: 201, description: 'All departments retrieved successfully' })
     async adminUserDelete(@Body() user: DeleteDepartmentRequestBody, @Res() res: Response) {
         const response = await this.departmentService.deleteDepartment(user)
 
@@ -56,9 +57,10 @@ export class DepartmentController {
         })
     }
 
-    @Get('')
-    @ApiOperation({ summary: 'Subscribe' })
-    @ApiResponse({ status: 201, description: 'Subscription created.' })
+    @ApiTags('Super Admin Endpoints')
+    @Post('')
+    @ApiOperation({ summary: 'View details of a department' })
+    @ApiResponse({ status: 200, description: 'Department Retrieved Successfully.' })
     async viewDepartment(@Body() department: DeleteDepartmentRequestBody,@Res() res: Response) {
         const response = await this.departmentService.GetDepartment(department)
 
@@ -69,9 +71,10 @@ export class DepartmentController {
         })
     }
 
+    @ApiTags('Department Manager Endpoints')
     @Patch('')
-    @ApiOperation({ summary: 'Subscribe' })
-    @ApiResponse({ status: 201, description: 'Subscription created.' })
+    @ApiOperation({ summary: 'Update details of a department' })
+    @ApiResponse({ status: 201, description: 'Department Updated successfully.' })
     async PatchDepartment(@Body() department: UpdateDepartmentRequestBody, @Res() res: Response) {
         const response = await this.departmentService.patchDepartmentDetails(department)
 
@@ -82,35 +85,18 @@ export class DepartmentController {
         })
     }
 
+    @ApiTags('Super Admin Endpoints')
+    @Patch('')
+    @ApiOperation({ summary: 'Update Details of a Department by Manager' })
+    @ApiResponse({ status: 201, description: 'Department Updated Successfully.' })
+    async ManagerPatchDepartment(@Body() department: UpdateDepartmentRequestBody, @Res() res: Response) {
+        const response = await this.departmentService.patchDepartmentDetails(department)
 
-    
-    // @Delete('')
-    // @ApiOperation({ summary: 'Subscribe' })
-    // async adminDepartmentDelete(@Body() user: DeleteUserRequestBody, @Res() res: Response) {
-    //     const response = await this.userService.deleteUser(user)
+        return res.status(response.statusCode).json({
+            message: response.message,
+            data: response.data
 
-    //     return res.status(response.statusCode).json({
-    //         message: response.message,
-    //         data: response.data
+        })
+    }
 
-    //     })
-    // }
-
-    // @Get()
-    // @ApiOperation({ summary: 'Subscribe' })
-    // async allUsers( @Res() res: Response) {
-    //     const response = await this.userService.getUsers()
-
-    //     return res.status(response.statusCode).json({
-    //         message: response.message,
-    //         data: response.data
-
-    //     })
-    // }
-
-
-
-
-
-  
 }
